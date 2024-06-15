@@ -19,6 +19,7 @@ import { Button } from "../ui/button";
 
 import { CommentValidation } from "@/lib/validations/thread";
 import { addCommentToThread } from "@/lib/actions/thread.actions";
+import AnonAvatar from "../shared/AnonAvatar";
 
 interface Props {
   threadId: string;
@@ -83,6 +84,7 @@ function Comment({
         />
 
         <Button type="submit" variant="default" className="">
+          <AnonAvatar size={32} />
           Reply
         </Button>
       </form>

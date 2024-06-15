@@ -2,7 +2,6 @@
 import mongoose from "mongoose";
 
 export enum ThreadStatus {
-  Deleted = "deleted",
   Pending = "pending",
   Completed = "completed",
 }

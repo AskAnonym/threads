@@ -32,11 +32,17 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
     // })
     .populate({
       path: "children", // Populate the children field
-      populate: {
-        path: "author", // Populate the author field within children
-        model: User,
-        select: "_id name parentId image", // Select only _id and username fields of the author
-      },
+      populate: [
+        {
+          path: "author", // Populate the author field within children
+          model: User,
+          select: "_id name parentId image username", // Select only _id and username fields of the author
+        },
+        {
+          path: "children", // Populate the children field within children
+          model: Thread, // The model of the nested children (assuming it's the same "Thread" model)
+        },
+      ],
     });
 
   // Count the total number of top-level posts (threads) i.e., threads that are not comments.
@@ -184,7 +190,7 @@ export async function fetchThreadById(threadId: string) {
           {
             path: "author", // Populate the author field within children
             model: User,
-            select: "_id id name parentId image", // Select only _id and username fields of the author
+            select: "_id id name parentId image username", // Select only _id and username fields of the author
           },
           {
             path: "children", // Populate the children field within children

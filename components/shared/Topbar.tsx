@@ -30,7 +30,11 @@ function Topbar() {
           </SignedIn>
         </div>
 
-        <UserButton appearance={{ baseTheme: dark }} showName={true} />
+        <UserButton
+          appearance={{ baseTheme: dark }}
+          showName={true}
+          afterSignOutUrl="/"
+        />
       </div>
     </nav>
   );

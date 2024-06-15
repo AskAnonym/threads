@@ -21,7 +21,7 @@ async function page({ params }: { params: { id: string } }) {
   const thread = await fetchThreadById(params.id);
 
   return (
-    <section className='relative'>
+    <section className="relative">
       <div>
         <ThreadCard
           id={thread._id}
@@ -29,21 +29,24 @@ async function page({ params }: { params: { id: string } }) {
           parentId={thread.parentId}
           content={thread.text}
           author={thread.author}
-          community={thread.community}
           createdAt={thread.createdAt}
           comments={thread.children}
         />
       </div>
 
-      <div className='mt-7'>
+      <div className=" flex flex-col gap-4">
         <Comment
           threadId={params.id}
           currentUserImg={user.imageUrl}
           currentUserId={JSON.stringify(userInfo._id)}
         />
+        <div className=" text-small-medium text-light-4">
+          <span className=" text-primary-500">*</span> Your profile is
+          <b className="ml-1">Anonymous</b>!
+        </div>
       </div>
 
-      <div className='mt-10'>
+      <div className="mt-10">
         {thread.children.map((childItem: any) => (
           <ThreadCard
             key={childItem._id}
@@ -52,7 +55,6 @@ async function page({ params }: { params: { id: string } }) {
             parentId={childItem.parentId}
             content={childItem.text}
             author={childItem.author}
-            community={childItem.community}
             createdAt={childItem.createdAt}
             comments={childItem.children}
             isComment

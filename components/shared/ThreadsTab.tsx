@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 
-import { fetchCommunityPosts } from "@/lib/actions/community.actions";
 import { fetchUserPosts } from "@/lib/actions/user.actions";
 
 import ThreadCard from "../cards/ThreadCard";
@@ -10,6 +9,7 @@ interface Result {
   name: string;
   image: string;
   id: string;
+  username: string;
   threads: {
     _id: string;
     text: string;
@@ -19,11 +19,6 @@ interface Result {
       image: string;
       id: string;
     };
-    community: {
-      id: string;
-      name: string;
-      image: string;
-    } | null;
     createdAt: string;
     children: {
       author: {
@@ -46,13 +41,7 @@ async function ThreadsTab({
   accountType,
   status,
 }: Props) {
-  let result: Result;
-
-  if (accountType === "Community") {
-    result = await fetchCommunityPosts(accountId);
-  } else {
-    result = await fetchUserPosts(accountId, status);
-  }
+  const result: Result = await fetchUserPosts(accountId, status);
 
   if (!result) {
     redirect("/");
@@ -67,20 +56,12 @@ async function ThreadsTab({
           currentUserId={currentUserId}
           parentId={thread.parentId}
           content={thread.text}
-          author={
-            accountType === "User"
-              ? { name: result.name, image: result.image, id: result.id }
-              : {
-                  name: thread.author.name,
-                  image: thread.author.image,
-                  id: thread.author.id,
-                }
-          }
-          community={
-            accountType === "Community"
-              ? { name: result.name, id: result.id, image: result.image }
-              : thread.community
-          }
+          author={{
+            name: result.name,
+            image: result.image,
+            id: result.id,
+            username: result.username,
+          }}
           createdAt={thread.createdAt}
           comments={thread.children}
           replyVisible={status === ThreadStatus.Pending}
