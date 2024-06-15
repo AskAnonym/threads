@@ -1,7 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
+import { Montserrat } from "next/font/google";
+import { ClerkProvider, currentUser } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 
 import "../globals.css";
@@ -10,32 +10,37 @@ import Bottombar from "@/components/shared/Bottombar";
 import RightSidebar from "@/components/shared/RightSidebar";
 import Topbar from "@/components/shared/Topbar";
 
-const inter = Inter({ subsets: ["latin"] });
+const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Threads",
-  description: "A Next.js 13 Meta Threads application",
+  title: "AskAnonym | Anonym Social Platform",
+  description: "Ask anonym questions!",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const user = await currentUser();
+
   return (
     <ClerkProvider
       appearance={{
         baseTheme: dark,
       }}
     >
-      <html lang='en'>
-        <body className={inter.className}>
+      <html lang="en">
+        <head>
+          <link rel="icon" href="/favicon.png" sizes="any" />
+        </head>
+        <body className={montserrat.className}>
           <Topbar />
 
-          <main className='flex flex-row'>
-            <LeftSidebar />
-            <section className='main-container'>
-              <div className='w-full max-w-4xl'>{children}</div>
+          <main className="flex flex-row">
+            {user && <LeftSidebar username={user.username!} />}
+            <section className="main-container">
+              <div className="w-full max-w-4xl">{children}</div>
             </section>
             {/* @ts-ignore */}
             <RightSidebar />

@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { connectToDB } from "../mongoose";
 
 import User from "../models/user.model";
-import Thread from "../models/thread.model";
+import Thread, { ThreadStatus } from "../models/thread.model";
 import Community from "../models/community.model";
 
 export async function fetchPosts(pageNumber = 1, pageSize = 20) {
@@ -15,7 +15,10 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
   const skipAmount = (pageNumber - 1) * pageSize;
 
   // Create a query to fetch the posts that have no parent (top-level threads) (a thread that is not a comment/reply).
-  const postsQuery = Thread.find({ parentId: { $in: [null, undefined] } })
+  const postsQuery = Thread.find({
+    parentId: { $in: [null, undefined] },
+    status: ThreadStatus.Completed,
+  })
     .sort({ createdAt: "desc" })
     .skip(skipAmount)
     .limit(pageSize)
@@ -23,10 +26,10 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
       path: "author",
       model: User,
     })
-    .populate({
-      path: "community",
-      model: Community,
-    })
+    // .populate({
+    //   path: "community",
+    //   model: Community,
+    // })
     .populate({
       path: "children", // Populate the children field
       populate: {
@@ -49,39 +52,42 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
 }
 
 interface Params {
-  text: string,
-  author: string,
-  communityId: string | null,
-  path: string,
+  text: string;
+  author: string;
+  // communityId: string | null,
+  path: string;
+  askerId: string;
 }
 
-export async function createThread({ text, author, communityId, path }: Params
-) {
+export async function createThread({ text, author, path, askerId }: Params) {
   try {
     connectToDB();
 
-    const communityIdObject = await Community.findOne(
-      { id: communityId },
-      { _id: 1 }
-    );
+    // const communityIdObject = await Community.findOne(
+    //   { id: communityId },
+    //   { _id: 1 }
+    // );
 
     const createdThread = await Thread.create({
       text,
       author,
-      community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
+      askerId,
+      // community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
     });
+
+    console.log("createdThread", createdThread);
 
     // Update User model
     await User.findByIdAndUpdate(author, {
       $push: { threads: createdThread._id },
     });
 
-    if (communityIdObject) {
-      // Update Community model
-      await Community.findByIdAndUpdate(communityIdObject, {
-        $push: { threads: createdThread._id },
-      });
-    }
+    // if (communityIdObject) {
+    //   // Update Community model
+    //   await Community.findByIdAndUpdate(communityIdObject, {
+    //     $push: { threads: createdThread._id },
+    //   });
+    // }
 
     revalidatePath(path);
   } catch (error: any) {
@@ -221,13 +227,18 @@ export async function addCommentToThread(
       text: commentText,
       author: userId,
       parentId: threadId, // Set the parentId to the original thread's ID
+      status: ThreadStatus.Completed,
+      askerId: " ",
     });
+
+    console.log("commentThread", commentThread);
 
     // Save the comment thread to the database
     const savedCommentThread = await commentThread.save();
 
     // Add the comment thread's ID to the original thread's children array
     originalThread.children.push(savedCommentThread._id);
+    originalThread.status = ThreadStatus.Completed;
 
     // Save the updated original thread to the database
     await originalThread.save();

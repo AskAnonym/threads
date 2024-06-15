@@ -1,4 +1,11 @@
+/* eslint-disable no-unused-vars */
 import mongoose from "mongoose";
+
+export enum ThreadStatus {
+  Deleted = "deleted",
+  Pending = "pending",
+  Completed = "completed",
+}
 
 const threadSchema = new mongoose.Schema({
   text: {
@@ -10,9 +17,18 @@ const threadSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  askerId: {
+    type: String,
+    ref: "User",
+    required: true,
+  },
   community: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Community",
+  },
+  status: {
+    type: String,
+    default: "pending",
   },
   createdAt: {
     type: Date,

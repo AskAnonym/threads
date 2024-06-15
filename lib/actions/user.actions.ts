@@ -4,16 +4,18 @@ import { FilterQuery, SortOrder } from "mongoose";
 import { revalidatePath } from "next/cache";
 
 import Community from "../models/community.model";
-import Thread from "../models/thread.model";
+import Thread, { ThreadStatus } from "../models/thread.model";
 import User from "../models/user.model";
 
 import { connectToDB } from "../mongoose";
 
-export async function fetchUser(userId: string) {
+export async function fetchUser(userId: string, username?: string) {
   try {
     connectToDB();
 
-    return await User.findOne({ id: userId }).populate({
+    const filter = username ? { username } : { id: userId };
+
+    return await User.findOne(filter).populate({
       path: "communities",
       model: Community,
     });
@@ -54,7 +56,7 @@ export async function updateUser({
       { upsert: true }
     );
 
-    if (path === "/profile/edit") {
+    if (path === "/p/edit") {
       revalidatePath(path);
     }
   } catch (error: any) {
@@ -62,7 +64,10 @@ export async function updateUser({
   }
 }
 
-export async function fetchUserPosts(userId: string) {
+export async function fetchUserPosts(
+  userId: string,
+  threadStatus: ThreadStatus
+) {
   try {
     connectToDB();
 
@@ -70,12 +75,13 @@ export async function fetchUserPosts(userId: string) {
     const threads = await User.findOne({ id: userId }).populate({
       path: "threads",
       model: Thread,
+      match: { status: threadStatus },
       populate: [
-        {
-          path: "community",
-          model: Community,
-          select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
-        },
+        // {
+        //   path: "community",
+        //   model: Community,
+        //   select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
+        // },
         {
           path: "children",
           model: Thread,
@@ -87,6 +93,7 @@ export async function fetchUserPosts(userId: string) {
         },
       ],
     });
+
     return threads;
   } catch (error) {
     console.error("Error fetching user threads:", error);

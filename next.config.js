@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: '/@:username/:path*',
+        destination: '/profile/:username/:path*',
+      },
+    ]
+  },
   experimental: {
     serverActions: true,
     serverComponentsExternalPackages: ["mongoose"],

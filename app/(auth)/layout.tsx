@@ -24,8 +24,12 @@ export default function RootLayout({
         baseTheme: dark,
       }}
     >
-      <html lang='en'>
-        <body className={`${inter.className} bg-dark-1`}>{children}</body>
+      <html lang="en">
+        <body
+          className={`${inter.className} flex h-screen items-center justify-center bg-dark-1`}
+        >
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );

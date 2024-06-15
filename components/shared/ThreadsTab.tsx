@@ -4,6 +4,7 @@ import { fetchCommunityPosts } from "@/lib/actions/community.actions";
 import { fetchUserPosts } from "@/lib/actions/user.actions";
 
 import ThreadCard from "../cards/ThreadCard";
+import { ThreadStatus } from "@/lib/models/thread.model";
 
 interface Result {
   name: string;
@@ -36,15 +37,21 @@ interface Props {
   currentUserId: string;
   accountId: string;
   accountType: string;
+  status: ThreadStatus;
 }
 
-async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
+async function ThreadsTab({
+  currentUserId,
+  accountId,
+  accountType,
+  status,
+}: Props) {
   let result: Result;
 
   if (accountType === "Community") {
     result = await fetchCommunityPosts(accountId);
   } else {
-    result = await fetchUserPosts(accountId);
+    result = await fetchUserPosts(accountId, status);
   }
 
   if (!result) {
@@ -52,7 +59,7 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
   }
 
   return (
-    <section className='mt-9 flex flex-col gap-10'>
+    <section className="mt-9 flex flex-col gap-10">
       {result.threads.map((thread) => (
         <ThreadCard
           key={thread._id}
@@ -76,6 +83,7 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
           }
           createdAt={thread.createdAt}
           comments={thread.children}
+          replyVisible={status === ThreadStatus.Pending}
         />
       ))}
     </section>
