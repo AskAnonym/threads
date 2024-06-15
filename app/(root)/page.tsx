@@ -25,8 +25,6 @@ async function Home({
 
   return (
     <>
-      {/* <h1 className='head-text text-left'>Home</h1> */}
-
       <section className="mt-9 flex flex-col gap-10">
         {result.posts.length === 0 ? (
           <p className="no-result">No threads found</p>
@@ -43,6 +41,10 @@ async function Home({
                 createdAt={post.createdAt}
                 comments={post.children}
                 firstReplyContent={result.posts[0]?.children[0]?.text}
+                summaryContent={true}
+                viewMode="feed"
+                askerId={post.askerId}
+                currentUserObjectId={userInfo._id}
               />
             ))}
           </>

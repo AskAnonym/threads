@@ -42,7 +42,7 @@ function UserCard({ id, name, username, imgUrl, personType }: Props) {
           if (isCommunity) {
             router.push(`/communities/${id}`);
           } else {
-            router.push(`@${username}`);
+            router.push(`/@${username}`);
           }
         }}
       >

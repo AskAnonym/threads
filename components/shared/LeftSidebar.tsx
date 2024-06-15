@@ -20,7 +20,7 @@ const LeftSidebar = ({ username }: { username: string }) => {
             (pathname.includes(link.route) && link.route.length > 1) ||
             pathname === link.route;
 
-          if (link.route === "/profile") link.route = `@${username}`;
+          if (link.route === "/profile") link.route = `/@${username}`;
 
           return (
             <Link

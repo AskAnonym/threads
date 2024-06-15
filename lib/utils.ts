@@ -41,3 +41,10 @@ export function formatThreadCount(count: number): string {
     return `${threadCount} ${threadWord}`;
   }
 }
+
+export function formatThreadContent(text: string, limit: number) {
+  if (text.length > limit) {
+    return text.slice(0, limit) + "...";
+  }
+  return text;
+}

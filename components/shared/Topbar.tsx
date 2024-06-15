@@ -9,8 +9,8 @@ function Topbar() {
       <Link href="/" className="flex items-center gap-4">
         <Image src="/logo-mini.png" alt="logo" width={48} height={48} />
         <p className="text-heading3-bold text-light-1 max-xs:hidden">
-          <span className=" mr-1 text-heading2-bold text-primary-500">Ask</span>
-          Anonym
+          <span className=" mr-1 text-primary-500">Mor</span>
+          yeti
         </p>
       </Link>
 

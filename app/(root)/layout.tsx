@@ -9,11 +9,12 @@ import LeftSidebar from "@/components/shared/LeftSidebar";
 import Bottombar from "@/components/shared/Bottombar";
 import RightSidebar from "@/components/shared/RightSidebar";
 import Topbar from "@/components/shared/Topbar";
+import { Toaster } from "@/components/ui/toaster";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AskAnonym | Anonym Social Platform",
+  title: "Moryeti | Anonym Social Platform",
   description: "Ask anonym questions!",
 };
 
@@ -45,6 +46,7 @@ export default async function RootLayout({
             {/* @ts-ignore */}
             <RightSidebar />
           </main>
+          <Toaster />
 
           <Bottombar />
         </body>

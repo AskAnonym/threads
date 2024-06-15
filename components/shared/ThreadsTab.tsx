@@ -14,6 +14,7 @@ interface Result {
     _id: string;
     text: string;
     parentId: string | null;
+    askerId: string | null;
     author: {
       name: string;
       image: string;
@@ -23,23 +24,25 @@ interface Result {
     children: {
       author: {
         image: string;
+        id: string;
       };
+      text: string;
     }[];
   }[];
 }
 
 interface Props {
   currentUserId: string;
+  currentUserObjectId: string;
   accountId: string;
-  accountType: string;
   status: ThreadStatus;
 }
 
 async function ThreadsTab({
   currentUserId,
   accountId,
-  accountType,
   status,
+  currentUserObjectId,
 }: Props) {
   const result: Result = await fetchUserPosts(accountId, status);
 
@@ -65,6 +68,11 @@ async function ThreadsTab({
           createdAt={thread.createdAt}
           comments={thread.children}
           replyVisible={status === ThreadStatus.Pending}
+          firstReplyContent={thread.children[0]?.text}
+          viewMode="feed"
+          askerId={thread.askerId}
+          threadStatus={status}
+          currentUserObjectId={currentUserObjectId}
         />
       ))}
     </section>

@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import {
   Form,
@@ -19,6 +19,7 @@ import Image from "next/image";
 
 import { ThreadValidation } from "@/lib/validations/thread";
 import { createThread } from "@/lib/actions/thread.actions";
+import { useToast } from "../ui/use-toast";
 
 interface Props {
   userId: string;
@@ -26,10 +27,8 @@ interface Props {
 }
 
 function PostThread({ userId, askerId }: Props) {
-  const router = useRouter();
   const pathname = usePathname();
-
-  // const { organization } = useOrganization();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof ThreadValidation>>({
     resolver: zodResolver(ThreadValidation),
@@ -40,16 +39,21 @@ function PostThread({ userId, askerId }: Props) {
     },
   });
 
+  const { reset } = form;
+
   const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
     await createThread({
       text: values.thread,
       author: userId,
       askerId,
-      // communityId: organization ? organization.id : null,
       path: pathname,
     });
 
-    router.push("/");
+    reset();
+    toast({
+      title: "Question Sent!",
+      description: "It will be appears after user response.",
+    });
   };
 
   return (

@@ -8,6 +8,7 @@ import Thread, { ThreadStatus } from "../models/thread.model";
 import User from "../models/user.model";
 
 import { connectToDB } from "../mongoose";
+import BlockedUsers from "../models/blocked-users.model";
 
 export async function fetchUser(userId: string, username?: string) {
   try {
@@ -70,20 +71,14 @@ export async function fetchUserPosts(
 ) {
   try {
     connectToDB();
-
     // Find all threads authored by the user with the given userId
     const threads = await User.findOne({
       id: userId,
-      status: threadStatus,
     }).populate({
       path: "threads",
       model: Thread,
+      match: { status: threadStatus },
       populate: [
-        // {
-        //   path: "community",
-        //   model: Community,
-        //   select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
-        // },
         {
           path: "children",
           model: Thread,
@@ -188,5 +183,34 @@ export async function getActivity(userId: string) {
   } catch (error) {
     console.error("Error fetching replies: ", error);
     throw error;
+  }
+}
+
+export async function blockUser({
+  userId,
+  userObjectId,
+  blockedUserId,
+  path,
+}: {
+  userId: string;
+  userObjectId: string;
+  blockedUserId: string;
+  path: string;
+}) {
+  try {
+    connectToDB();
+
+    const createdBlock = await BlockedUsers.create({
+      userId,
+      blockedUserId,
+    });
+
+    await User.findByIdAndUpdate(userObjectId, {
+      $push: { blockedUsers: createdBlock._id },
+    });
+
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Failed to create BlockedUsers: ${error.message}`);
   }
 }

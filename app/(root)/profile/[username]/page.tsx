@@ -44,10 +44,10 @@ async function Page({ params }: { params: { username: string } }) {
             <PostThread userId={userInfo._id} askerId={authUser.id} />
 
             <ThreadsTab
-              currentUserId={currentUserInfo._id}
+              currentUserId={currentUserInfo.id}
               accountId={userInfo.id}
-              accountType="User"
               status={ThreadStatus.Completed}
+              currentUserObjectId={currentUserInfo._id}
             />
           </>
         )}
@@ -84,10 +84,10 @@ async function Page({ params }: { params: { username: string } }) {
               className="w-full text-light-1"
             >
               <ThreadsTab
-                currentUserId={currentUserInfo._id}
+                currentUserId={currentUserInfo.id}
                 accountId={userInfo.id}
-                accountType="User"
                 status={ThreadStatus.Completed}
+                currentUserObjectId={currentUserInfo._id}
               />
             </TabsContent>
             <TabsContent
@@ -96,10 +96,10 @@ async function Page({ params }: { params: { username: string } }) {
               className="w-full text-light-1"
             >
               <ThreadsTab
-                currentUserId={currentUserInfo._id}
+                currentUserId={currentUserInfo.id}
                 accountId={userInfo.id}
-                accountType="User"
                 status={ThreadStatus.Pending}
+                currentUserObjectId={currentUserInfo._id}
               />
             </TabsContent>
           </Tabs>

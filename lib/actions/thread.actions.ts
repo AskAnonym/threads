@@ -69,31 +69,16 @@ export async function createThread({ text, author, path, askerId }: Params) {
   try {
     connectToDB();
 
-    // const communityIdObject = await Community.findOne(
-    //   { id: communityId },
-    //   { _id: 1 }
-    // );
-
     const createdThread = await Thread.create({
       text,
       author,
       askerId,
-      // community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
     });
-
-    console.log("createdThread", createdThread);
 
     // Update User model
     await User.findByIdAndUpdate(author, {
       $push: { threads: createdThread._id },
     });
-
-    // if (communityIdObject) {
-    //   // Update Community model
-    //   await Community.findByIdAndUpdate(communityIdObject, {
-    //     $push: { threads: createdThread._id },
-    //   });
-    // }
 
     revalidatePath(path);
   } catch (error: any) {
@@ -180,11 +165,6 @@ export async function fetchThreadById(threadId: string) {
         select: "_id id name image",
       }) // Populate the author field with _id and username
       .populate({
-        path: "community",
-        model: Community,
-        select: "_id id name image",
-      }) // Populate the community field with _id and name
-      .populate({
         path: "children", // Populate the children field
         populate: [
           {
@@ -232,12 +212,9 @@ export async function addCommentToThread(
     const commentThread = new Thread({
       text: commentText,
       author: userId,
-      parentId: threadId, // Set the parentId to the original thread's ID
+      parentId: threadId,
       status: ThreadStatus.Completed,
-      askerId: " ",
     });
-
-    console.log("commentThread", commentThread);
 
     // Save the comment thread to the database
     const savedCommentThread = await commentThread.save();

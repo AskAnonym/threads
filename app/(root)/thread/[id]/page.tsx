@@ -20,6 +20,13 @@ async function page({ params }: { params: { id: string } }) {
 
   const thread = await fetchThreadById(params.id);
 
+  function getUserType(id: any): "owner" | "asker" | "replier" | undefined {
+    if (thread.author.id === id) return "owner";
+    if (thread.askerId === id) return "asker";
+
+    return "replier";
+  }
+
   return (
     <section className="relative">
       <div>
@@ -31,6 +38,8 @@ async function page({ params }: { params: { id: string } }) {
           author={thread.author}
           createdAt={thread.createdAt}
           comments={thread.children}
+          askerId={thread.askerId}
+          currentUserObjectId={userInfo._id}
         />
       </div>
 
@@ -58,6 +67,9 @@ async function page({ params }: { params: { id: string } }) {
             createdAt={childItem.createdAt}
             comments={childItem.children}
             isComment
+            userType={getUserType(childItem.author.id)}
+            askerId={childItem.askerId}
+            currentUserObjectId={userInfo._id}
           />
         ))}
       </div>

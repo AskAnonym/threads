@@ -25,6 +25,12 @@ const userSchema = new mongoose.Schema({
       ref: "Thread",
     },
   ],
+  blockedUsers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "BlockedUsers",
+    },
+  ],
   onboarded: {
     type: Boolean,
     default: false,

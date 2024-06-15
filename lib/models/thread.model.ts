@@ -18,8 +18,6 @@ const threadSchema = new mongoose.Schema({
   },
   askerId: {
     type: String,
-    ref: "User",
-    required: true,
   },
   community: {
     type: mongoose.Schema.Types.ObjectId,
