@@ -7,11 +7,10 @@ import { dark } from "@clerk/themes";
 import "../globals.css";
 import LeftSidebar from "@/components/shared/LeftSidebar";
 import Bottombar from "@/components/shared/Bottombar";
-import RightSidebar from "@/components/shared/RightSidebar";
 import Topbar from "@/components/shared/Topbar";
 import { Toaster } from "@/components/ui/toaster";
 
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { Analytics } from "@vercel/analytics/react";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -52,7 +51,7 @@ export default async function RootLayout({
 
           <Bottombar />
         </body>
-        <GoogleAnalytics gaId="G-DEKQTSL3EP" />
+        <Analytics />
       </html>
     </ClerkProvider>
   );
