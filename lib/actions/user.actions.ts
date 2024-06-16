@@ -167,6 +167,21 @@ export async function fetchUsers({
   }
 }
 
+export async function fetchNewJoiners() {
+  try {
+    connectToDB();
+
+    const usersQuery = User.find().sort({ _id: -1 }).limit(5);
+
+    const users = await usersQuery.exec();
+
+    return { users };
+  } catch (error) {
+    console.error("Error fetchNewJoiners", error);
+    throw error;
+  }
+}
+
 export async function getActivity(userId: string) {
   try {
     connectToDB();

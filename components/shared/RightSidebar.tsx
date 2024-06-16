@@ -2,25 +2,22 @@ import { currentUser } from "@clerk/nextjs";
 
 import UserCard from "../cards/UserCard";
 
-import { fetchUsers } from "@/lib/actions/user.actions";
+import { fetchNewJoiners } from "@/lib/actions/user.actions";
 
 async function RightSidebar() {
   const user = await currentUser();
   if (!user) return null;
 
-  const similarMinds = await fetchUsers({
-    userId: user.id,
-    pageSize: 4,
-  });
+  const result = await fetchNewJoiners();
 
   return (
     <section className="custom-scrollbar rightsidebar">
       <div className="flex flex-1 flex-col justify-start">
         <h3 className="text-heading4-medium text-light-1">New Joiners</h3>
         <div className="mt-7 flex w-[350px] flex-col gap-10">
-          {similarMinds.users.length > 0 ? (
+          {result.users.length > 0 ? (
             <>
-              {similarMinds.users.map((person) => (
+              {result.users.map((person) => (
                 <UserCard
                   key={person.id}
                   id={person.id}
