@@ -11,6 +11,8 @@ import RightSidebar from "@/components/shared/RightSidebar";
 import Topbar from "@/components/shared/Topbar";
 import { Toaster } from "@/components/ui/toaster";
 
+import { GoogleAnalytics } from "@next/third-parties/google";
+
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -50,6 +52,7 @@ export default async function RootLayout({
 
           <Bottombar />
         </body>
+        <GoogleAnalytics gaId="G-DEKQTSL3EP" />
       </html>
     </ClerkProvider>
   );

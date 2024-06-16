@@ -31,9 +31,10 @@ async function Page({ params }: { params: { username: string } }) {
         imgUrl={userInfo.image}
         bio={userInfo.bio}
         questionCount={
-          // @ts-ignore
-          userInfo.threads.filter((w) => w.status === ThreadStatus.Completed)
-            .length
+          userInfo.threads?.filter(
+            // @ts-ignore
+            (w) => w.status === ThreadStatus.Completed
+          ).length
         }
         followerCount={0}
       />

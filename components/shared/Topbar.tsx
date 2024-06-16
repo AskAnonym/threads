@@ -1,5 +1,4 @@
-import { SignedIn, SignOutButton, UserButton } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
+import { SignedIn, SignOutButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -8,7 +7,7 @@ function Topbar() {
     <nav className="topbar">
       <Link href="/" className="flex items-center gap-4">
         <Image src="/moryeti-logo.png" alt="logo" width={240} height={72} />
-        <span className="px-2 py-1 bg-primary-500 text-base-semibold text-light-1 rounded-full">
+        <span className="rounded-full bg-primary-500 px-2 py-1 text-base-semibold text-light-1">
           Beta
         </span>
       </Link>
@@ -28,12 +27,6 @@ function Topbar() {
             </SignOutButton>
           </SignedIn>
         </div>
-
-        <UserButton
-          appearance={{ baseTheme: dark }}
-          showName={true}
-          afterSignOutUrl="/"
-        />
       </div>
     </nav>
   );

@@ -3,7 +3,6 @@
 import { FilterQuery, SortOrder } from "mongoose";
 import { revalidatePath } from "next/cache";
 
-import Community from "../models/community.model";
 import Thread, { ThreadStatus } from "../models/thread.model";
 import User from "../models/user.model";
 
@@ -17,8 +16,9 @@ export async function fetchUser(userId: string, username?: string) {
     const filter = username ? { username } : { id: userId };
 
     return await User.findOne(filter).populate({
-      path: "communities",
-      model: Community,
+      path: "threads",
+      model: Thread,
+      select: "status",
     });
   } catch (error: any) {
     throw new Error(`Failed to fetch user: ${error.message}`);
