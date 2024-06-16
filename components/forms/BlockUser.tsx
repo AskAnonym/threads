@@ -35,7 +35,7 @@ function BlockUser({ blockingUserId, userId, userObjectId }: BlockUserProps) {
   return (
     <Button
       variant="link"
-      className="flex h-5 flex-row gap-1 text-[12px]"
+      className="flex h-5 flex-row gap-1 text-[14px]"
       onClick={() => onBlockUser()}
     >
       <Image

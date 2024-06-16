@@ -7,11 +7,10 @@ function Topbar() {
   return (
     <nav className="topbar">
       <Link href="/" className="flex items-center gap-4">
-        <Image src="/logo-mini.png" alt="logo" width={48} height={48} />
-        <p className="text-heading3-bold text-light-1 max-xs:hidden">
-          <span className=" mr-1 text-primary-500">Mor</span>
-          yeti
-        </p>
+        <Image src="/moryeti-logo.png" alt="logo" width={240} height={72} />
+        <span className="px-2 py-1 bg-primary-500 text-base-semibold text-light-1 rounded-full">
+          Beta
+        </span>
       </Link>
 
       <div className="flex items-center gap-1">

@@ -7,7 +7,7 @@ import Pagination from "@/components/shared/Pagination";
 import { fetchPosts } from "@/lib/actions/thread.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
 
-async function Home({
+async function Page({
   searchParams,
 }: {
   searchParams: { [key: string]: string | undefined };
@@ -21,7 +21,8 @@ async function Home({
   const result = await fetchPosts(
     searchParams.page ? +searchParams.page : 1,
     30,
-    userInfo.id
+    userInfo.id,
+    true
   );
 
   return (
@@ -46,6 +47,7 @@ async function Home({
                 viewMode="feed"
                 askerId={post.askerId}
                 currentUserObjectId={userInfo._id}
+                threadStatus={post.status}
               />
             ))}
           </>
@@ -63,4 +65,4 @@ async function Home({
   );
 }
 
-export default Home;
+export default Page;

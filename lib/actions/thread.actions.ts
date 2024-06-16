@@ -8,17 +8,34 @@ import User from "../models/user.model";
 import Thread, { ThreadStatus } from "../models/thread.model";
 import Community from "../models/community.model";
 
-export async function fetchPosts(pageNumber = 1, pageSize = 20) {
+export async function fetchPosts(
+  pageNumber = 1,
+  pageSize = 20,
+  userId: string,
+  onlyUserPosts?: boolean
+) {
   connectToDB();
 
   // Calculate the number of posts to skip based on the page number and page size.
   const skipAmount = (pageNumber - 1) * pageSize;
 
+  let filter = {};
+
+  if (onlyUserPosts) {
+    filter = {
+      parentId: { $in: [null, undefined] },
+      status: { $in: [ThreadStatus.Pending, ThreadStatus.Completed] },
+      askerId: userId,
+    };
+  } else {
+    filter = {
+      parentId: { $in: [null, undefined] },
+      status: ThreadStatus.Completed,
+    };
+  }
+
   // Create a query to fetch the posts that have no parent (top-level threads) (a thread that is not a comment/reply).
-  const postsQuery = Thread.find({
-    parentId: { $in: [null, undefined] },
-    status: ThreadStatus.Completed,
-  })
+  const postsQuery = Thread.find(filter)
     .sort({ createdAt: "desc" })
     .skip(skipAmount)
     .limit(pageSize)
@@ -26,10 +43,6 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
       path: "author",
       model: User,
     })
-    // .populate({
-    //   path: "community",
-    //   model: Community,
-    // })
     .populate({
       path: "children", // Populate the children field
       populate: [
@@ -60,12 +73,18 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
 interface Params {
   text: string;
   author: string;
-  // communityId: string | null,
+  authorId: string;
   path: string;
   askerId: string;
 }
 
-export async function createThread({ text, author, path, askerId }: Params) {
+export async function createThread({
+  text,
+  author,
+  path,
+  askerId,
+  authorId,
+}: Params) {
   try {
     connectToDB();
 
@@ -73,6 +92,7 @@ export async function createThread({ text, author, path, askerId }: Params) {
       text,
       author,
       askerId,
+      authorId,
     });
 
     // Update User model
@@ -195,8 +215,9 @@ export async function fetchThreadById(threadId: string) {
 export async function addCommentToThread(
   threadId: string,
   commentText: string,
-  userId: string,
-  path: string
+  author: string,
+  path: string,
+  authorId: string
 ) {
   connectToDB();
 
@@ -211,9 +232,10 @@ export async function addCommentToThread(
     // Create the new comment thread
     const commentThread = new Thread({
       text: commentText,
-      author: userId,
+      author,
       parentId: threadId,
       status: ThreadStatus.Completed,
+      authorId,
     });
 
     // Save the comment thread to the database
@@ -221,6 +243,10 @@ export async function addCommentToThread(
 
     // Add the comment thread's ID to the original thread's children array
     originalThread.children.push(savedCommentThread._id);
+    originalThread.createdAt =
+      originalThread.status === ThreadStatus.Pending
+        ? Date.now()
+        : originalThread.createdAt;
     originalThread.status = ThreadStatus.Completed;
 
     // Save the updated original thread to the database

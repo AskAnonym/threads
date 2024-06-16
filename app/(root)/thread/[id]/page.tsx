@@ -48,6 +48,7 @@ async function page({ params }: { params: { id: string } }) {
           threadId={params.id}
           currentUserImg={user.imageUrl}
           currentUserId={JSON.stringify(userInfo._id)}
+          authorId={userInfo.id}
         />
         <div className=" text-small-medium text-light-4">
           <span className=" text-primary-500">*</span> Your profile is

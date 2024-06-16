@@ -71,13 +71,22 @@ export async function fetchUserPosts(
 ) {
   try {
     connectToDB();
-    // Find all threads authored by the user with the given userId
+    const blockedUserIds = await BlockedUsers.find({ userId });
+
     const threads = await User.findOne({
       id: userId,
     }).populate({
       path: "threads",
       model: Thread,
-      match: { status: threadStatus },
+      match: {
+        status: threadStatus,
+        askerId: {
+          $nin:
+            threadStatus === ThreadStatus.Pending
+              ? blockedUserIds.map((w) => w.blockedUserId)
+              : null,
+        },
+      },
       populate: [
         {
           path: "children",

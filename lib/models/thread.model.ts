@@ -16,16 +16,16 @@ const threadSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  authorId: {
+    type: String,
+    required: true,
+  },
   askerId: {
     type: String,
   },
-  community: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Community",
-  },
   status: {
     type: String,
-    default: "pending",
+    default: ThreadStatus.Pending,
   },
   createdAt: {
     type: Date,

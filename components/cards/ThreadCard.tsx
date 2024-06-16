@@ -9,6 +9,7 @@ import { twMerge } from "tailwind-merge";
 import Avatar from "../shared/Avatar";
 import BlockUser from "../forms/BlockUser";
 import { ThreadStatus } from "@/lib/models/thread.model";
+import { Button } from "../ui/button";
 
 interface Props {
   id: string;
@@ -84,12 +85,14 @@ function ThreadCard({
 
             <div className="thread-card_bar" />
           </div>
-
           <div className="flex w-full flex-col">
             {userType === "owner" ? (
               <Link href={`/@${author.username}`} className="w-fit">
                 <h4 className="cursor-pointer text-base-semibold text-light-1">
-                  {getAuthorName()}
+                  {getAuthorName()}{" "}
+                  <span className=" text-light-4/50 text-[13px]">
+                    @{author.username}
+                  </span>
                 </h4>
               </Link>
             ) : (
@@ -123,29 +126,47 @@ function ThreadCard({
             <div className={`${isComment && "mb-10"} mt-5 flex flex-col gap-3`}>
               <div className="flex flex-row items-center justify-between">
                 <div className="flex gap-3.5">
-                  <Image
+                  {/* <Image
                     src="/assets/heart-gray.svg"
                     alt="heart"
                     width={24}
                     height={24}
                     className="cursor-pointer object-contain"
-                  />
-                  <Image
+                  /> */}
+                  {!parentId && (
+                    <Link href={`/thread/${id}`}>
+                      <Button
+                        variant="link"
+                        className=" flex flex-row items-center gap-[2px] pl-0 text-[12px]"
+                      >
+                        <Image
+                          src="/assets/reply.svg"
+                          alt="reply"
+                          width={24}
+                          height={24}
+                          className="cursor-pointer object-contain"
+                        />
+                        Reply
+                      </Button>
+                    </Link>
+                  )}
+
+                  {/* <Image
                     src="/assets/share.svg"
                     alt="heart"
                     width={24}
                     height={24}
                     className="cursor-pointer object-contain"
-                  />
+                  /> */}
                 </div>
 
-                <BlockUser
-                  blockingUserId={
-                    threadStatus === ThreadStatus.Pending ? askerId! : author.id
-                  }
-                  userId={currentUserId}
-                  userObjectId={currentUserObjectId}
-                />
+                {threadStatus === ThreadStatus.Pending && (
+                  <BlockUser
+                    blockingUserId={askerId!}
+                    userId={currentUserId}
+                    userObjectId={currentUserObjectId}
+                  />
+                )}
               </div>
 
               {isComment && comments.length > 0 && (
@@ -171,7 +192,7 @@ function ThreadCard({
       {!isComment && comments.length > 0 && (
         <div className="ml-1 mt-3 flex items-center gap-2">
           <Link href={`/thread/${id}`}>
-            <p className="mt-1 text-subtle-medium text-primary-500">
+            <p className="mt-1 text-subtle-medium text-light-4/70 transition-colors duration-200 hover:text-primary-500">
               {comments.length} repl
               {comments.length > 1 ? "ies" : "y"}
             </p>
@@ -183,8 +204,9 @@ function ThreadCard({
         <Comment
           threadId={id}
           currentUserImg={author.image}
-          currentUserId={JSON.stringify(currentUserId)}
+          currentUserId={JSON.stringify(currentUserObjectId)}
           placeholder="Answer..."
+          authorId={author.id}
         />
       )}
     </article>

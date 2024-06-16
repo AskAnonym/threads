@@ -25,6 +25,7 @@ interface Props {
   threadId: string;
   currentUserImg: string;
   currentUserId: string;
+  authorId: string;
   placeholder?: string;
 }
 
@@ -32,6 +33,7 @@ function Comment({
   threadId,
   currentUserImg,
   currentUserId,
+  authorId,
   placeholder = "Comment...",
 }: Props) {
   const pathname = usePathname();
@@ -48,7 +50,8 @@ function Comment({
       threadId,
       values.thread,
       JSON.parse(currentUserId),
-      pathname
+      pathname,
+      authorId
     );
 
     form.reset();

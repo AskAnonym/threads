@@ -22,11 +22,12 @@ import { createThread } from "@/lib/actions/thread.actions";
 import { useToast } from "../ui/use-toast";
 
 interface Props {
-  userId: string;
+  author: string;
+  authorId: string;
   askerId: string;
 }
 
-function PostThread({ userId, askerId }: Props) {
+function PostThread({ author, askerId, authorId }: Props) {
   const pathname = usePathname();
   const { toast } = useToast();
 
@@ -34,7 +35,7 @@ function PostThread({ userId, askerId }: Props) {
     resolver: zodResolver(ThreadValidation),
     defaultValues: {
       thread: "",
-      accountId: userId,
+      accountId: author,
       askerId,
     },
   });
@@ -44,9 +45,10 @@ function PostThread({ userId, askerId }: Props) {
   const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
     await createThread({
       text: values.thread,
-      author: userId,
+      author,
       askerId,
       path: pathname,
+      authorId,
     });
 
     reset();
