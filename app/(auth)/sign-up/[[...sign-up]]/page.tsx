@@ -4,7 +4,7 @@ export default function Page() {
   return (
     <SignUp
       appearance={{
-        layout: { privacyPageUrl: " ", termsPageUrl: " " },
+        layout: { privacyPageUrl: "/privacy", termsPageUrl: "/terms" },
       }}
     />
   );
