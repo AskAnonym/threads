@@ -41,7 +41,7 @@ async function Home({
                 author={post.author}
                 createdAt={post.createdAt}
                 comments={post.children}
-                firstReplyContent={result.posts[0]?.children[0]?.text}
+                firstReplyContent={post.children[0]?.text}
                 summaryContent={true}
                 viewMode="feed"
                 askerId={post.askerId}
