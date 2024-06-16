@@ -87,6 +87,7 @@ export async function fetchUserPosts(
               : null,
         },
       },
+      options: { sort: { createdAt: "desc" } },
       populate: [
         {
           path: "children",
