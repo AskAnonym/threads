@@ -69,7 +69,7 @@ async function Home({
         )}
       </section>
 
-      {user && result.posts.length === 30 && (
+      {user && (
         <Pagination
           path="/"
           pageNumber={searchParams?.page ? +searchParams.page : 1}
