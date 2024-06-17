@@ -40,6 +40,7 @@ async function page({ params }: { params: { id: string } }) {
           comments={thread.children}
           askerId={thread.askerId}
           currentUserObjectId={userInfo._id}
+          firstReplyContent={thread.children[0].text}
         />
       </div>
 
@@ -57,7 +58,7 @@ async function page({ params }: { params: { id: string } }) {
       </div>
 
       <div className="mt-10">
-        {thread.children.map((childItem: any) => (
+        {thread.children.slice(1).map((childItem: any) => (
           <ThreadCard
             key={childItem._id}
             id={childItem._id}

@@ -10,7 +10,7 @@ import Thread, { ThreadStatus } from "../models/thread.model";
 export async function fetchPosts(
   pageNumber = 1,
   pageSize = 20,
-  userId: string,
+  userId?: string,
   onlyUserPosts?: boolean
 ) {
   connectToDB();

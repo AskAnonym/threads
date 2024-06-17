@@ -1,7 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { formatDateString, formatThreadContent } from "@/lib/utils";
+import {
+  formatDateString,
+  formatThreadContent,
+  getAuthorName,
+} from "@/lib/utils";
 import DeleteThread from "../forms/DeleteThread";
 
 import Comment from "@/components/forms/Comment";
@@ -58,20 +62,6 @@ function ThreadCard({
   askerId,
   threadStatus,
 }: Props) {
-  function getAuthorName() {
-    switch (userType) {
-      case "owner":
-        return author.name;
-      case "replier":
-        return "Anonymous";
-      case "asker":
-        return "Questioner";
-
-      default:
-        break;
-    }
-  }
-
   return (
     <article
       className={`flex w-full flex-col rounded-xl ${
@@ -89,7 +79,7 @@ function ThreadCard({
             {userType === "owner" ? (
               <Link href={`/@${author.username}`} className="w-fit">
                 <h4 className="cursor-pointer text-base-semibold text-light-1">
-                  {getAuthorName()}{" "}
+                  {getAuthorName(userType, author.name)}{" "}
                   <span className=" text-light-4/50 text-[13px]">
                     @{author.username}
                   </span>
@@ -98,7 +88,7 @@ function ThreadCard({
             ) : (
               <div className="w-fit">
                 <h4 className="text-base-semibold text-light-1">
-                  {getAuthorName()}
+                  {getAuthorName(userType, author.name)}
                 </h4>
               </div>
             )}
@@ -108,14 +98,14 @@ function ThreadCard({
 
             <div
               className={twMerge(
-                "mt-2 text-body1-semibold text-light-2",
-                viewMode === "feed" &&
-                  "pl-2  text-body1-bold text-light-2 border-l-4 border-primary-500 "
+                "mt-2 text-light-2",
+                !isComment &&
+                  "border-l-4 border-primary-500 pl-2 text-body1-bold font-bold text-[#fff]"
               )}
             >
               {summaryContent ? formatThreadContent(content, 500) : content}
             </div>
-            {!isComment && firstReplyContent && (
+            {firstReplyContent && (
               <p className="mt-4 inline-flex gap-1 text-small-regular text-light-2">
                 {summaryContent
                   ? formatThreadContent(firstReplyContent, 500)
@@ -123,22 +113,16 @@ function ThreadCard({
               </p>
             )}
 
-            <div className={`${isComment && "mb-10"} mt-5 flex flex-col gap-3`}>
+            <div className={`${isComment && "mb-10"} mt-1 flex flex-col gap-3`}>
               <div className="flex flex-row items-center justify-between">
                 <div className="flex gap-3.5">
-                  {/* <Image
-                    src="/assets/heart-gray.svg"
-                    alt="heart"
-                    width={24}
-                    height={24}
-                    className="cursor-pointer object-contain"
-                  /> */}
                   {!parentId && (
                     <Link href={`/thread/${id}`}>
                       <Button
                         variant="link"
                         className=" flex flex-row items-center gap-[2px] pl-0 text-[12px]"
                       >
+                        Reply
                         <Image
                           src="/assets/reply.svg"
                           alt="reply"
@@ -146,7 +130,6 @@ function ThreadCard({
                           height={24}
                           className="cursor-pointer object-contain"
                         />
-                        Reply
                       </Button>
                     </Link>
                   )}

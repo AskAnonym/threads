@@ -4,6 +4,7 @@ import { fetchUserPosts } from "@/lib/actions/user.actions";
 
 import ThreadCard from "../cards/ThreadCard";
 import { ThreadStatus } from "@/lib/models/thread.model";
+import PublicThreadCard from "../cards/PublicThreadCard";
 
 interface Result {
   name: string;
@@ -46,35 +47,55 @@ async function ThreadsTab({
 }: Props) {
   const result: Result = await fetchUserPosts(accountId, status);
 
+  const isPublicView = !currentUserId && !currentUserObjectId;
+
   if (!result) {
     redirect("/");
   }
 
   return (
     <section className="mt-9 flex flex-col gap-10">
-      {result.threads.map((thread) => (
-        <ThreadCard
-          key={thread._id}
-          id={thread._id}
-          currentUserId={currentUserId}
-          parentId={thread.parentId}
-          content={thread.text}
-          author={{
-            name: result.name,
-            image: result.image,
-            id: result.id,
-            username: result.username,
-          }}
-          createdAt={thread.createdAt}
-          comments={thread.children}
-          replyVisible={status === ThreadStatus.Pending}
-          firstReplyContent={thread.children[0]?.text}
-          viewMode="feed"
-          askerId={thread.askerId}
-          threadStatus={status}
-          currentUserObjectId={currentUserObjectId}
-        />
-      ))}
+      {!isPublicView &&
+        result.threads.map((thread) => (
+          <ThreadCard
+            key={thread._id}
+            id={thread._id}
+            currentUserId={currentUserId}
+            parentId={thread.parentId}
+            content={thread.text}
+            author={{
+              name: result.name,
+              image: result.image,
+              id: result.id,
+              username: result.username,
+            }}
+            createdAt={thread.createdAt}
+            comments={thread.children}
+            replyVisible={status === ThreadStatus.Pending}
+            firstReplyContent={thread.children[0]?.text}
+            viewMode="feed"
+            askerId={thread.askerId}
+            threadStatus={status}
+            currentUserObjectId={currentUserObjectId}
+          />
+        ))}
+
+      {isPublicView &&
+        result.threads.map((thread) => (
+          <PublicThreadCard
+            key={thread._id}
+            id={thread._id}
+            content={thread.text}
+            author={{
+              name: result.name,
+              image: result.image,
+              id: result.id,
+              username: result.username,
+            }}
+            createdAt={thread.createdAt}
+            firstReplyContent={thread.children[0]?.text}
+          />
+        ))}
     </section>
   );
 }

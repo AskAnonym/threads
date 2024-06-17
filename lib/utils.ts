@@ -48,3 +48,17 @@ export function formatThreadContent(text: string, limit: number) {
   }
   return text;
 }
+
+export function getAuthorName(userType: string, authorName: string) {
+  switch (userType) {
+    case "owner":
+      return authorName;
+    case "replier":
+      return "Anonymous";
+    case "asker":
+      return "Questioner";
+
+    default:
+      break;
+  }
+}

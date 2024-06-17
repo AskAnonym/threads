@@ -12,24 +12,23 @@ import { ThreadStatus } from "@/lib/models/thread.model";
 
 async function Page({ params }: { params: { username: string } }) {
   const authUser = await currentUser();
-  if (!authUser) return null;
 
   const userInfo = await fetchUser("", params.username);
-  if (!userInfo?.onboarded) redirect("/onboarding");
+  if (authUser && !userInfo?.onboarded) redirect("/onboarding");
 
-  const currentUserInfo = await fetchUser(authUser.id);
+  const currentUserInfo = await fetchUser(authUser?.id);
 
-  const isOwnerProfile = userInfo.id === authUser.id;
+  const isOwnerProfile = userInfo?.id === authUser?.id;
 
   return (
     <section>
       <ProfileHeader
         accountId={userInfo.id}
-        authUserId={authUser.id}
         name={userInfo.name}
         username={userInfo.username}
         imgUrl={userInfo.image}
         bio={userInfo.bio}
+        isOwnerUser={isOwnerProfile}
         questionCount={
           userInfo.threads?.filter(
             // @ts-ignore
@@ -42,17 +41,19 @@ async function Page({ params }: { params: { username: string } }) {
       <div className="mt-9">
         {!isOwnerProfile && (
           <>
-            <PostThread
-              author={userInfo._id}
-              askerId={authUser.id}
-              authorId={userInfo.id}
-            />
+            {authUser && (
+              <PostThread
+                author={userInfo._id}
+                askerId={authUser.id}
+                authorId={userInfo.id}
+              />
+            )}
 
             <ThreadsTab
-              currentUserId={currentUserInfo.id}
+              currentUserId={currentUserInfo?.id}
+              currentUserObjectId={currentUserInfo?._id}
               accountId={userInfo.id}
               status={ThreadStatus.Completed}
-              currentUserObjectId={currentUserInfo._id}
             />
           </>
         )}

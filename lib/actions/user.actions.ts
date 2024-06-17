@@ -9,7 +9,9 @@ import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
 import BlockedUsers from "../models/blocked-users.model";
 
-export async function fetchUser(userId: string, username?: string) {
+export async function fetchUser(userId?: string, username?: string) {
+  if (!userId && !username) return;
+
   try {
     connectToDB();
 
