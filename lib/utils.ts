@@ -42,11 +42,18 @@ export function formatThreadCount(count: number): string {
   }
 }
 
-export function formatThreadContent(text: string, limit: number) {
-  if (text.length > limit) {
-    return text.slice(0, limit) + "...";
+export function formatThreadContent(sentence: string, limit: number) {
+  if (sentence.length <= limit) {
+    return sentence;
   }
-  return text;
+  let truncatedSentence = sentence.slice(0, limit + 1).trim();
+  const lastSpaceIndex = truncatedSentence.lastIndexOf(" ");
+
+  if (lastSpaceIndex !== -1) {
+    truncatedSentence = truncatedSentence.slice(0, lastSpaceIndex);
+  }
+
+  return truncatedSentence;
 }
 
 export function getAuthorName(userType: string, authorName: string) {
@@ -62,3 +69,6 @@ export function getAuthorName(userType: string, authorName: string) {
       break;
   }
 }
+
+export const clamp = (val: number, min: number, max: number) =>
+  Math.min(Math.max(val, min), max);

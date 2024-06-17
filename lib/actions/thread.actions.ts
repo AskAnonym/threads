@@ -6,6 +6,10 @@ import { connectToDB } from "../mongoose";
 
 import User from "../models/user.model";
 import Thread, { ThreadStatus } from "../models/thread.model";
+import { createNotification } from "./notification.actions";
+import { NotificationType } from "../models/notifications.model";
+import { formatThreadContent } from "../utils";
+import BlockedUsers from "../models/blocked-users.model";
 
 export async function fetchPosts(
   pageNumber = 1,
@@ -87,6 +91,11 @@ export async function createThread({
   try {
     connectToDB();
 
+    const blockedUserIds = await BlockedUsers.find({ userId: authorId });
+    if (blockedUserIds.map((w) => w.blockedUserId).includes(askerId)) {
+      return;
+    }
+
     const createdThread = await Thread.create({
       text,
       author,
@@ -97,6 +106,16 @@ export async function createThread({
     // Update User model
     await User.findByIdAndUpdate(author, {
       $push: { threads: createdThread._id },
+    });
+
+    const askerUser = await User.findOne({ id: askerId });
+
+    await createNotification({
+      userId: authorId,
+      createdUserId: askerUser._id,
+      type: NotificationType.NewQuestion,
+      link: `/thread/${createdThread.id}`,
+      content: formatThreadContent(text, 50),
     });
 
     revalidatePath(path);
@@ -168,7 +187,7 @@ export async function fetchThreadById(threadId: string) {
       .populate({
         path: "author",
         model: User,
-        select: "_id id name image",
+        select: "_id id name image username",
       }) // Populate the author field with _id and username
       .populate({
         path: "children", // Populate the children field
@@ -196,6 +215,17 @@ export async function fetchThreadById(threadId: string) {
     console.error("Error while fetching thread:", err);
     throw new Error("Unable to fetch thread");
   }
+}
+
+function getCommentNotificationType(
+  ownerId: string,
+  askerId: string,
+  commentUserId: string
+): NotificationType {
+  if (ownerId === commentUserId) return NotificationType.OwnerQuestionReply;
+  if (askerId === commentUserId) return NotificationType.AskerQuestionReply;
+
+  return NotificationType.AnonQuestionReply;
 }
 
 export async function addCommentToThread(
@@ -237,6 +267,35 @@ export async function addCommentToThread(
 
     // Save the updated original thread to the database
     await originalThread.save();
+
+    // Eğer anon ise iki bildirim, diğer türlü karşı tarafa bildirim at
+    if (originalThread.authorId !== authorId) {
+      await createNotification({
+        userId: originalThread.authorId,
+        createdUserId: author,
+        type: getCommentNotificationType(
+          originalThread.authorId,
+          originalThread.askerId,
+          authorId
+        ),
+        link: `/thread/${originalThread.id}`,
+        content: formatThreadContent(commentText, 50),
+      });
+    }
+
+    if (originalThread.askerId !== authorId) {
+      await createNotification({
+        userId: originalThread.askerId,
+        createdUserId: author,
+        type: getCommentNotificationType(
+          originalThread.authorId,
+          originalThread.askerId,
+          authorId
+        ),
+        link: `/thread/${originalThread.id}`,
+        content: formatThreadContent(commentText, 50),
+      });
+    }
 
     revalidatePath(path);
   } catch (err) {

@@ -169,50 +169,6 @@ export async function fetchUsers({
   }
 }
 
-export async function fetchNewJoiners() {
-  try {
-    connectToDB();
-
-    const usersQuery = User.find().sort({ _id: -1 }).limit(5);
-
-    const users = await usersQuery.exec();
-
-    return { users };
-  } catch (error) {
-    console.error("Error fetchNewJoiners", error);
-    throw error;
-  }
-}
-
-export async function getActivity(userId: string) {
-  try {
-    connectToDB();
-
-    // Find all threads created by the user
-    const userThreads = await Thread.find({ author: userId });
-
-    // Collect all the child thread ids (replies) from the 'children' field of each user thread
-    const childThreadIds = userThreads.reduce((acc, userThread) => {
-      return acc.concat(userThread.children);
-    }, []);
-
-    // Find and return the child threads (replies) excluding the ones created by the same user
-    const replies = await Thread.find({
-      _id: { $in: childThreadIds },
-      author: { $ne: userId }, // Exclude threads authored by the same user
-    }).populate({
-      path: "author",
-      model: User,
-      select: "name image _id",
-    });
-
-    return replies;
-  } catch (error) {
-    console.error("Error fetching replies: ", error);
-    throw error;
-  }
-}
-
 export async function blockUser({
   userId,
   userObjectId,

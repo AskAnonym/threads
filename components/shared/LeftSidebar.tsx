@@ -7,8 +7,15 @@ import { SignOutButton, SignedIn } from "@clerk/nextjs";
 
 import { sidebarLinks } from "@/constants";
 import { twMerge } from "tailwind-merge";
+import { clamp } from "@/lib/utils";
 
-const LeftSidebar = ({ username }: { username: string }) => {
+const LeftSidebar = ({
+  username,
+  newNotifCount,
+}: {
+  username: string;
+  newNotifCount?: number;
+}) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -26,8 +33,15 @@ const LeftSidebar = ({ username }: { username: string }) => {
             <Link
               href={link.route}
               key={link.label}
-              className={`leftsidebar_link ${isActive && "bg-primary-500 "}`}
+              className={`leftsidebar_link ${
+                isActive && "bg-primary-500 relative"
+              }`}
             >
+              {link.route === "/notification" && newNotifCount && (
+                <span className=" absolute w-6 h-6 rounded-full text-light-1 bg-primary-600/95 text-bold right-0 top-2 text-center">
+                  {clamp(newNotifCount, 0, 99)}
+                </span>
+              )}
               <Image
                 src={link.imgURL}
                 alt={link.label}

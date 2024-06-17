@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge";
 import AnonAvatar from "./AnonAvatar";
 
 interface AvatarProps {
-  variant: "owner" | "asker" | "replier";
+  variant?: "owner" | "asker" | "replier";
   author?: { username: string; image: string };
   className?: string;
 }
@@ -21,13 +21,15 @@ function Avatar({ variant, author, className }: AvatarProps) {
           <Image
             src={author.image}
             alt="user_community_image"
-            fill
+            width={44}
+            height={44}
             className="cursor-pointer rounded-full"
           />
         </Link>
       )}
       {variant === "asker" && <AnonAvatar size={44} className="" />}
       {variant === "replier" && <AnonAvatar size={44} className=" bg-blue" />}
+      {!variant && <AnonAvatar size={44} className=" bg-blue" />}
     </>
   );
 }

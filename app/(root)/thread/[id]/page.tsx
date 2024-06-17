@@ -40,7 +40,7 @@ async function page({ params }: { params: { id: string } }) {
           comments={thread.children}
           askerId={thread.askerId}
           currentUserObjectId={userInfo._id}
-          firstReplyContent={thread.children[0].text}
+          firstReplyContent={thread.children[0]?.text}
         />
       </div>
 
