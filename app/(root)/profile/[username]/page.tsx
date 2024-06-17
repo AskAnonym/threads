@@ -41,13 +41,11 @@ async function Page({ params }: { params: { username: string } }) {
       <div className="mt-9">
         {!isOwnerProfile && (
           <>
-            {authUser && (
-              <PostThread
-                author={userInfo._id}
-                askerId={authUser.id}
-                authorId={userInfo.id}
-              />
-            )}
+            <PostThread
+              author={userInfo._id}
+              askerId={authUser?.id}
+              authorId={userInfo.id}
+            />
 
             <ThreadsTab
               currentUserId={currentUserInfo?.id}

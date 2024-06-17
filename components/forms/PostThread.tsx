@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   Form,
@@ -24,10 +24,11 @@ import { useToast } from "../ui/use-toast";
 interface Props {
   author: string;
   authorId: string;
-  askerId: string;
+  askerId?: string;
 }
 
 function PostThread({ author, askerId, authorId }: Props) {
+  const router = useRouter();
   const pathname = usePathname();
   const { toast } = useToast();
 
@@ -36,13 +37,18 @@ function PostThread({ author, askerId, authorId }: Props) {
     defaultValues: {
       thread: "",
       accountId: author,
-      askerId,
+      askerId: "",
     },
   });
 
   const { reset } = form;
 
   const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
+    if (!askerId) {
+      router.push("/sign-in");
+      return;
+    }
+
     await createThread({
       text: values.thread,
       author,
