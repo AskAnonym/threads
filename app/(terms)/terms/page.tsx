@@ -2,7 +2,7 @@ async function Page() {
   return (
     <div>
       <h1>Terms and Conditions</h1>
-      <p>Last updated: [Date]</p>
+      <p>Last updated: 17.06.2027</p>
       <h2>1. Introduction</h2>
       <p>
         Welcome to Moryeti.com. These Terms and Conditions govern your use of
@@ -87,14 +87,13 @@ async function Page() {
       <h2>9. Governing Law</h2>
       <p>
         These terms shall be governed by and construed in accordance with the
-        laws of [Your Country/State], without regard to its conflict of law
-        principles.
+        laws, without regard to its conflict of law principles.
       </p>
 
       <h2>10. Contact Us</h2>
       <p>
         If you have any questions or concerns about these terms, please contact
-        us at [Your Contact Information].
+        us at.
       </p>
     </div>
   );

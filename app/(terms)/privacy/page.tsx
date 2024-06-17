@@ -2,7 +2,7 @@ async function Page() {
   return (
     <div>
       <h1>Privacy Policy</h1>
-      <p>Last updated: [Date]</p>
+      <p>Last updated: 17.06.2027</p>
       <h2>1. Introduction</h2>
       <p>
         Moryeti.com is committed to protecting your privacy. This Privacy Policy
@@ -88,8 +88,7 @@ async function Page() {
 
       <h2>9. Contact Us</h2>
       <p>
-        If you have any questions about this Privacy Policy, please contact us
-        at [Your Contact Information].
+        If you have any questions about this Privacy Policy, please contact us.
       </p>
     </div>
   );
