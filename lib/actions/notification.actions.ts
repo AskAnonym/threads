@@ -2,6 +2,8 @@
 
 import { connectToDB } from "../mongoose";
 
+import { revalidatePath } from "next/cache";
+
 import Notifications, { NotificationType } from "../models/notifications.model";
 import User from "../models/user.model";
 
@@ -71,6 +73,8 @@ export async function readNotifications(userId: string): Promise<void> {
         isRead: true,
       }
     );
+
+    revalidatePath("/notification");
   } catch (error: any) {
     throw new Error(`Failed to create/update user: ${error.message}`);
   }
