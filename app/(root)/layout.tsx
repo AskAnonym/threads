@@ -11,6 +11,7 @@ import Topbar from "@/components/shared/Topbar";
 import { Toaster } from "@/components/ui/toaster";
 
 import { Analytics } from "@vercel/analytics/react";
+import CallToAction from "@/components/shared/CallToAction";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -30,6 +31,7 @@ export default async function RootLayout({
     <ClerkProvider
       appearance={{
         baseTheme: dark,
+        variables: { colorPrimary: "#DF2085" },
       }}
     >
       <html lang="en">
@@ -49,7 +51,8 @@ export default async function RootLayout({
           </main>
           <Toaster />
 
-          <Bottombar />
+          {user && <Bottombar />}
+          {!user && <CallToAction />}
         </body>
         <Analytics />
       </html>

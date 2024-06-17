@@ -6,7 +6,7 @@ function Topbar() {
   return (
     <nav className="topbar">
       <Link href="/" className="flex items-center gap-4">
-        <Image src="/moryeti-logo.png" alt="logo" width={240} height={72} />
+        <Image src="/logo-only.png" alt="logo" width={72} height={72} />
         <span className="rounded-full bg-primary-500 px-2 py-1 text-base-semibold text-light-1">
           Beta
         </span>
