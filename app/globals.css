@@ -183,3 +183,21 @@
 .comment-form_btn {
   @apply rounded-3xl bg-primary-500 px-8 py-2 !text-small-regular text-light-1 max-xs:w-full !important;
 }
+
+.scrollbox {
+  visibility: hidden;
+}
+
+.scrollbox-content,
+.scrollbox:hover,
+.scrollbox:focus {
+  visibility: visible;
+}
+
+.scrollbox_delayed {
+  transition: visibility 0.2s;
+}
+
+.scrollbox_delayed:hover {
+  transition: visibility 0s 0.2s;
+}

@@ -29,26 +29,29 @@ async function Home({
 
   return (
     <>
-      <section className="flex items-center justify-center gap-4">
-        <ul className="mb-8 flex w-full items-start justify-between space-x-3 overflow-x-scroll rounded py-4 drop-shadow-xl">
-          {activeUsers.users?.map((user) => (
-            <li
-              className="flex w-[55px] flex-none flex-col items-center justify-center space-y-1 truncate text-[12px] font-bold text-primary-500 relative"
-              key={user.username}
-            >
-              <div className=" absolute top-0 right-0 w-5 h-5 bg-primary-500/80 text-white rounded-full z-10 text-center">
-                {user.filteredPostsCount}
-              </div>
-              <Avatar
-                author={{ image: user.image, username: user.username }}
-                variant="owner"
-                className=" relative"
-              />
-              {user.username.slice(0, 7)}
-            </li>
-          ))}
-        </ul>
-      </section>
+      <div className="flex items-center justify-center">
+        <section className="flex max-w-xs items-center justify-center gap-4 sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-full ">
+          <ul className="mb-8 flex items-start justify-between space-x-3 overflow-x-scroll rounded py-4 drop-shadow-xl scrollbox">
+            {activeUsers.users?.map((user) => (
+              <li
+                className="relative flex w-[55px] flex-none flex-col items-center justify-center space-y-1 truncate text-[12px] font-bold text-primary-500 scrollbox-content "
+                key={user.username}
+              >
+                <div className=" absolute right-0 top-0 z-10 h-5 w-5 rounded-full bg-primary-500/80 text-center text-white">
+                  {user.filteredPostsCount}
+                </div>
+                <Avatar
+                  author={{ image: user.image, username: user.username }}
+                  variant="owner"
+                  className=" relative"
+                />
+                {user.username.slice(0, 7)}
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+
       <section className="flex flex-col gap-10">
         {result.posts.length === 0 ? (
           <p className="no-result">No threads found</p>
