@@ -14,8 +14,9 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+
+import { Textarea } from "@/components/ui/textarea";
 
 import { CommentValidation } from "@/lib/validations/thread";
 import { addCommentToThread } from "@/lib/actions/thread.actions";
@@ -75,11 +76,11 @@ function Comment({
                 />
               </FormLabel>
               <FormControl className="border-none bg-transparent">
-                <Input
-                  type="text"
+                <Textarea
+                  rows={2}
                   {...field}
                   placeholder={placeholder}
-                  className="no-focus text-light-1 outline-none"
+                  className="no-focus text-light-1 outline-none bg-gray-800/50"
                 />
               </FormControl>
             </FormItem>
