@@ -19,7 +19,7 @@ const NotifProvider: React.FC<{
     const interval = setInterval(async () => {
       const count = await newNotificationCount(userId);
       setNotifCount(count || 0);
-    }, 60 * 1000);
+    }, 15 * 1000);
 
     return () => clearInterval(interval);
   }, []);
