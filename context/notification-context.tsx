@@ -1,7 +1,11 @@
 "use client";
 
-import { newNotificationCount } from "@/lib/actions/notification.actions";
+import {
+  newNotificationCount,
+  readNotifications,
+} from "@/lib/actions/notification.actions";
 import React, { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export type NotifContextType = {
   notifCount: number;
@@ -13,6 +17,7 @@ const NotifProvider: React.FC<{
   userId?: string;
   children: React.ReactNode;
 }> = ({ children, userId }) => {
+  const pathname = usePathname();
   const [notifCount, setNotifCount] = React.useState<number>(0);
 
   useEffect(() => {
@@ -23,6 +28,17 @@ const NotifProvider: React.FC<{
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (pathname === "/notification" && userId) {
+      const fn = async () => {
+        await readNotifications(userId);
+        setNotifCount(0);
+      };
+
+      fn();
+    }
+  }, [pathname]);
 
   return (
     <NotifContext.Provider value={{ notifCount }}>

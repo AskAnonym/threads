@@ -4,10 +4,7 @@ import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 import { fetchUser } from "@/lib/actions/user.actions";
-import {
-  fetchNotifications,
-  readNotifications,
-} from "@/lib/actions/notification.actions";
+import { fetchNotifications } from "@/lib/actions/notification.actions";
 import { NotificationType } from "@/lib/models/notifications.model";
 import Avatar from "@/components/shared/Avatar";
 import { twMerge } from "tailwind-merge";
@@ -36,8 +33,6 @@ async function Page() {
   const notifications = (await fetchNotifications(
     userInfo.id
   )) as Notification[];
-
-  await readNotifications(userInfo.id);
 
   function getAvatarVariant(notifType: NotificationType) {
     switch (notifType) {
