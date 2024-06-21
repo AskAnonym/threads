@@ -4,7 +4,7 @@ import Link from "next/link";
 
 function Topbar() {
   return (
-    <nav className="topbar">
+    <nav className="topbar visible md:invisible">
       <Link href="/" className="flex items-center gap-4">
         <Image src="/logo-only.png" alt="logo" width={72} height={72} />
         <span className="rounded-full bg-primary-500 px-2 py-1 text-base-semibold text-light-1">

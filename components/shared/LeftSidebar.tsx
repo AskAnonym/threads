@@ -19,6 +19,12 @@ const LeftSidebar = ({ username }: { username: string }) => {
   return (
     <section className="custom-scrollbar leftsidebar">
       <div className="flex w-full flex-1 flex-col gap-6 px-6">
+        <Link href="/" className="flex items-center gap-4">
+          <Image src="/logo-only.png" alt="logo" width={72} height={72} />
+          <span className="rounded-full bg-primary-500 px-2 py-1 text-base-semibold text-light-1">
+            Beta
+          </span>
+        </Link>
         {sidebarLinks.map((link) => {
           const isActive =
             (pathname.includes(link.route) && link.route.length > 1) ||
