@@ -31,12 +31,10 @@ const NotifProvider: React.FC<{
 
   useEffect(() => {
     if (pathname === "/notification" && userId) {
-      const fn = async () => {
+      setTimeout(async () => {
         await readNotifications(userId);
         setNotifCount(0);
-      };
-
-      fn();
+      }, 5 * 1000);
     }
   }, [pathname]);
 

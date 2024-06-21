@@ -5,9 +5,15 @@ import ThreadCard from "@/components/cards/ThreadCard";
 import Pagination from "@/components/shared/Pagination";
 
 import { fetchPosts } from "@/lib/actions/thread.actions";
-import { fetchActiveUsers, fetchUser } from "@/lib/actions/user.actions";
+import {
+  fetchActiveUsers,
+  fetchUser,
+  fetchUsers,
+} from "@/lib/actions/user.actions";
 import PublicThreadCard from "@/components/cards/PublicThreadCard";
 import Avatar from "@/components/shared/Avatar";
+
+import NewJoinersCard from "@/components/cards/NewJoinersCard";
 
 async function Home({
   searchParams,
@@ -26,6 +32,11 @@ async function Home({
   );
 
   const activeUsers = await fetchActiveUsers({ limit: 20 });
+
+  const newJoiners = await fetchUsers({
+    userId: userInfo?.id,
+    pageSize: 5,
+  });
 
   return (
     <>
@@ -51,6 +62,14 @@ async function Home({
           </ul>
         </section>
       </div>
+
+      <NewJoinersCard
+        users={newJoiners.users.map((w) => ({
+          image: w.image,
+          name: w.name,
+          username: w.username,
+        }))}
+      />
 
       <section className="flex flex-col gap-10">
         {result.posts.length === 0 ? (

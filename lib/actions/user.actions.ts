@@ -147,7 +147,7 @@ export async function fetchUsers({
     }
 
     // Define the sort options for the fetched users based on createdAt field and provided sort order.
-    const sortOptions = { createdAt: sortBy };
+    const sortOptions = { _id: sortBy };
 
     const usersQuery = User.find(query)
       .sort(sortOptions)
