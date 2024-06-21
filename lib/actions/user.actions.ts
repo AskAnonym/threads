@@ -169,6 +169,58 @@ export async function fetchUsers({
   }
 }
 
+export async function fetchActiveUsers({ limit = 10 }: { limit?: number }) {
+  try {
+    connectToDB();
+
+    // parentId: { $in: [null, undefined] },
+    const users = await User.aggregate([
+      {
+        $lookup: {
+          from: "threads",
+          localField: "threads",
+          foreignField: "_id",
+          as: "threads",
+        },
+      },
+      {
+        $addFields: {
+          filteredPosts: {
+            $filter: {
+              input: "$threads",
+              as: "post",
+              cond: {
+                $and: [{ $eq: ["$$post.status", "completed"] }],
+              },
+            },
+          },
+        },
+      },
+      {
+        $addFields: {
+          filteredPostsCount: { $size: "$filteredPosts" },
+        },
+      },
+      {
+        $sort: { filteredPostsCount: -1 },
+      },
+      {
+        $project: {
+          name: 1,
+          username: 1,
+          image: 1,
+          filteredPostsCount: 1,
+        },
+      },
+    ]).limit(limit);
+
+    return { users };
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw error;
+  }
+}
+
 export async function blockUser({
   userId,
   userObjectId,
