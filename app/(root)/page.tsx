@@ -35,7 +35,7 @@ async function Home({
   return (
     <>
       <div className="flex items-center justify-center">
-        <section className="flex max-w-[380px] items-center justify-center gap-4 sm:max-w-[500px] md:max-w-[590px] lg:max-w-2xl xl:max-w-full ">
+        <section className="flex max-w-[380px] items-center justify-center gap-4 sm:max-w-[470px] md:max-w-[570px] lg:max-w-2xl xl:max-w-full ">
           <ul className="mb-8 flex items-start justify-between space-x-3 overflow-x-scroll rounded py-4 drop-shadow-xl scrollbox">
             {activeUsers.users?.map((user) => (
               <li
