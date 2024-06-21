@@ -113,6 +113,7 @@ async function Page() {
                         username: notification.createdUserId.username,
                         image: notification.createdUserId.image,
                       }}
+                      className="relative"
                     />
                   )}
                   <p className="!text-small-regular text-light-1">

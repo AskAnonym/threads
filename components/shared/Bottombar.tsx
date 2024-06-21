@@ -6,8 +6,11 @@ import { usePathname } from "next/navigation";
 
 import { sidebarLinks } from "@/constants";
 import { clamp } from "@/lib/utils";
+import { NotifContext, NotifContextType } from "@/context/notification-context";
+import { useContext } from "react";
 
-function Bottombar({ newNotifCount }: { newNotifCount?: number }) {
+function Bottombar() {
+  const { notifCount } = useContext(NotifContext) as NotifContextType;
   const pathname = usePathname();
 
   return (
@@ -26,9 +29,9 @@ function Bottombar({ newNotifCount }: { newNotifCount?: number }) {
                 isActive ? "bg-primary-500" : "bg-primary-500/20"
               }`}
             >
-              {link.route === "/notification" && newNotifCount && (
+              {link.route === "/notification" && notifCount > 0 && (
                 <span className=" text-bold absolute -right-3 -top-1 h-6 w-6 rounded-full bg-primary-600/95 text-center text-light-1">
-                  {clamp(newNotifCount, 0, 99)}
+                  {clamp(notifCount, 0, 99)}
                 </span>
               )}
               <Image

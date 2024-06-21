@@ -21,8 +21,8 @@ function Avatar({ variant, author, className }: AvatarProps) {
           <Image
             src={author.image}
             alt="user_community_image"
-            width={44}
-            height={44}
+            fill
+            style={{ objectFit: "cover" }}
             className="cursor-pointer rounded-full"
           />
         </Link>

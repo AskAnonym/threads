@@ -8,14 +8,11 @@ import { SignOutButton, SignedIn } from "@clerk/nextjs";
 import { sidebarLinks } from "@/constants";
 import { twMerge } from "tailwind-merge";
 import { clamp } from "@/lib/utils";
+import { NotifContext, NotifContextType } from "@/context/notification-context";
+import { useContext } from "react";
 
-const LeftSidebar = ({
-  username,
-  newNotifCount,
-}: {
-  username: string;
-  newNotifCount?: number;
-}) => {
+const LeftSidebar = ({ username }: { username: string }) => {
+  const { notifCount } = useContext(NotifContext) as NotifContextType;
   const router = useRouter();
   const pathname = usePathname();
 
@@ -37,9 +34,9 @@ const LeftSidebar = ({
                 isActive && "bg-primary-500 relative"
               }`}
             >
-              {link.route === "/notification" && newNotifCount && (
+              {link.route === "/notification" && notifCount > 0 && (
                 <span className=" absolute w-6 h-6 rounded-full text-light-1 bg-primary-600/95 text-bold right-0 top-2 text-center">
-                  {clamp(newNotifCount, 0, 99)}
+                  {clamp(notifCount, 0, 99)}
                 </span>
               )}
               <Image

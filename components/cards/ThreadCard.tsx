@@ -65,7 +65,7 @@ function ThreadCard({
   return (
     <article
       className={`flex w-full flex-col rounded-xl ${
-        isComment ? "px-0 xs:px-7" : "bg-dark-2 p-7"
+        isComment ? "px-0 xs:px-7" : "bg-dark-2 py-7 px-4"
       }`}
     >
       <div className="flex items-start justify-between">
@@ -172,12 +172,12 @@ function ThreadCard({
         />
       </div>
 
-      {!isComment && comments.length > 0 && (
+      {!isComment && comments.length > 1 && (
         <div className="ml-1 mt-3 flex items-center gap-2">
           <Link href={`/thread/${id}`}>
             <p className="mt-1 text-subtle-medium text-light-4/70 transition-colors duration-200 hover:text-primary-500">
-              {comments.length} repl
-              {comments.length > 1 ? "ies" : "y"}
+              {comments.length - 1} repl
+              {comments.length - 1 > 1 ? "ies" : "y"}
             </p>
           </Link>
         </div>
